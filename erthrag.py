@@ -14,9 +14,8 @@ from langchain_pinecone import PineconeVectorStore
 import pinecone
 from pinecone import Pinecone
 
-# Access OpenAI API key from Streamlit secrets
+# Set OpenAI API key
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-openai.api_key = OPENAI_API_KEY
 
 # Initialize model and parser
 model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
@@ -24,8 +23,8 @@ parser = StrOutputParser()
 
 # Define the prompt template
 template = """
-Answer the questions based on the context below in Arabic.
-The context below contains information about Saudi Arabia's culture, heritage, and historical sites.
+Anwser the questions based on the context below in arabic.
+the context below having information about Saudi Arabia's Culture, heritage, and historical sites.
 Do not mention the context explicitly in your answer ever.
 If you can't answer the question, reply "I don't know".
 
@@ -47,138 +46,34 @@ splitted = text_splitter.split_documents(text)
 embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
 
-# Set Pinecone API key from Streamlit secrets
+# Set Pinecone API key
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
 pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
 index = pc.Index("erth")
 
 index_name = "erth"
 
-
-pinecone_vectorstore = PineconeVectorStore.from_documents(
+pinecone = PineconeVectorStore.from_documents(
     splitted, embedding, index_name=index_name
 )
 
-retriever = pinecone_vectorstore.as_retriever()
-
 # Define the chain
-def chain(question):
-    retrieval_result = retriever.get_relevant_documents(question)
-    st.write("Retrieved Documents:", retrieval_result)  # Debugging line
-    if not retrieval_result:
-        return "لم أتمكن من العثور على معلومات ذات صلة."
-    context = " ".join([doc.page_content for doc in retrieval_result if hasattr(doc, 'page_content')])
-    formatted_prompt = prompt.format(context=context, question=question)
-    response = model(formatted_prompt)
-    parsed_response = parser.parse(response)
-    return parsed_response
+chain = (
+    {"context": pinecone.as_retriever(), "question": RunnablePassthrough()}
+    | prompt
+    | model
+    | parser
+)
 
 # Streamlit UI
-st.image("Erth.png", use_column_width=True)
-st.title("Erth | إرث")
+st.title("Saudi Arabia Culture Chatbot")
 
-tab1, tab2 = st.tabs(["FT-AraGPT2 Text-to-text", " "])
+question = st.text_input("Enter your question about Saudi Arabia's culture, heritage, or historical sites:")
 
-with tab1:
-    st.header("Fine-Tuned AraGPT2 Text-To-Text")
-    if "gpt2_messages" not in st.session_state:
-        st.session_state.gpt2_messages = []
+if st.button("Ask"):
+    if question:
+        response = chain.invoke(question)
+        st.write("Answer:", response)
+    else:
+        st.write("Please enter a question.")
 
-    for message in st.session_state.gpt2_messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    if user_input := st.chat_input("إسألني عن التراث السعودي (AraGPT2)", key="user_input"):
-        st.session_state.gpt2_messages.append({"role": "user", "content": user_input})
-        with st.chat_message("user"):
-            st.markdown(user_input)
-
-        response = chain(user_input)
-        with st.chat_message("assistant"):
-            st.markdown(response)
-
-        st.session_state.gpt2_messages.append({"role": "assistant", "content": response})
-
-# # Access OpenAI API key from Streamlit secrets
-# OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-# openai.api_key = OPENAI_API_KEY
-
-# # Initialize model and parser
-# model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
-# parser = StrOutputParser()
-
-# # Define the prompt template
-# template = """
-# Answer the questions based on the context below in Arabic.
-# The context below contains information about Saudi Arabia's culture, heritage, and historical sites.
-# Do not mention the context explicitly in your answer ever.
-# If you can't answer the question, reply "I don't know".
-
-# Context: {context}
-# Question: {question}
-# """
-
-# prompt = ChatPromptTemplate.from_template(template)
-
-# # Load and split text
-# data_path = "data.txt"
-# loader = TextLoader(data_path)
-# text = loader.load()
-
-# text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
-# splitted = text_splitter.split_documents(text)
-
-# # Initialize embeddings and vectorstore
-# embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-# vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
-
-# # Set Pinecone API key from Streamlit secrets
-# # Set Pinecone API key from Streamlit secrets
-# PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-# os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
-# pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
-# index = pc.Index("erth")
-
-# index_name = "erth"
-
-# pinecone_vectorstore = PineconeVectorStore.from_documents(
-#     splitted, embedding, index_name=index_name
-# )
-
-# retriever = pinecone_vectorstore.as_retriever()
-
-# # Define the chain
-# def chain(question):
-#     retrieval_result = retriever.retrieve(question)
-#     context = " ".join([doc.page_content for doc in retrieval_result])
-#     prompt_result = prompt.format(context=context, question=question)
-#     model_result = model(prompt_result)
-#     parsed_result = parser.parse(model_result)
-#     return parsed_result
-
-# # Streamlit UI
-# st.image("Erth.png", use_column_width=True)
-# st.title("Erth | إرث")
-
-# tab1, tab2 = st.tabs(["FT-AraGPT2 Text-to-text", " "])
-
-# with tab1:
-#     st.header("Fine-Tuned AraGPT2 Text-To-Text")
-#     if "gpt2_messages" not in st.session_state:
-#         st.session_state.gpt2_messages = []
-
-#     for message in st.session_state.gpt2_messages:
-#         with st.chat_message(message["role"]):
-#             st.markdown(message["content"])
-
-#     if prompt := st.chat_input("إسألني عن التراث السعودي (AraGPT2)"):
-#         st.session_state.gpt2_messages.append({"role": "user", "content": prompt})
-#         with st.chat_message("user"):
-#             st.markdown(prompt)
-
-#         response = chain(prompt)
-#         with st.chat_message("assistant"):
-#             st.markdown(response)
-
-#         st.session_state.gpt2_messages.append({"role": "assistant", "content": response})
