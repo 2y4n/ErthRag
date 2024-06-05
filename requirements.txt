@@ -8,3 +8,4 @@ langchain_pinecone
 pinecone-client
 openai
 requests
+pinecone
