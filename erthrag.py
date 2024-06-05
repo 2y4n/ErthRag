@@ -79,10 +79,10 @@ st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
 #tabs
-tab1, tab2 = st.tabs(["RAG-based Chatbot", ""])
+tab1, tab2 = st.tabs(["  ", " "])
 
 with tab1:
-    st.header("RAG-based Chatbot")
+    st.header("Erth Chatbot")
     if "rag_messages" not in st.session_state:
         st.session_state.rag_messages = []
 
@@ -90,7 +90,7 @@ with tab1:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    if prompt := st.chat_input("إسألني عن التراث السعودي (RAG-based)"):
+    if prompt := st.chat_input("إسألني عن التراث السعودي (مثلا : المناطق الاثرية في الرياض والقصيم وحائل)"):
         st.session_state.rag_messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
