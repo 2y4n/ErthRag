@@ -72,9 +72,28 @@ def run_rag_chain(question):
     return parsed_response
 
 # Streamlit UI
-st.title("RAG-based Chatbot")
+st.image("Erth.png", use_column_width=True)
+st.title("Erth | إرث")
 
-user_input = st.text_input("Ask your question:")
-if user_input:
-    response = run_rag_chain(user_input)
-    st.write("Response:", response)
+#tabs
+tab1, tab2 = st.tabs(["RAG-based Chatbot", ""])
+
+with tab1:
+    st.header("RAG-based Chatbot")
+    if "rag_messages" not in st.session_state:
+        st.session_state.rag_messages = []
+
+    for message in st.session_state.rag_messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    if prompt := st.chat_input("إسألني عن التراث السعودي (RAG-based)"):
+        st.session_state.rag_messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        response = run_rag_chain(prompt)
+        with st.chat_message("assistant"):
+            st.markdown(response)
+
+        st.session_state.rag_messages.append({"role": "assistant", "content": response})
