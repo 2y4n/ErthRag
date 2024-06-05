@@ -54,8 +54,8 @@ pinecone_store = PineconeVectorStore.from_documents(splitted, embedding, index_n
 # Define the retrieval-augmented generation (RAG) chain
 def run_rag_chain(question):
     # Retrieve context from Pinecone
-    retriever = pinecone_store.as_retriever()
-    context = retriever.retrieve(question)
+    ret = pinecone_store.as_retriever()
+    context = ret.retrieve(question)
     
     # Format prompt with context and question
     formatted_prompt = prompt.format(context=context, question=question)
