@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import openai
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
