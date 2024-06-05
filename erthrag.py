@@ -51,20 +51,27 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(INDEX_NAME)
 pinecone_store = PineconeVectorStore.from_documents(splitted, embedding, index_name=INDEX_NAME)
 
-# Define the RAG chain
-chain = (
-    {"context": pinecone_store.as_retriever(), "question": RunnablePassthrough()}
-    | prompt
-    | model
-    | parser
-)
+# Define the retrieval-augmented generation (RAG) chain
+def run_rag_chain(question):
+    # Retrieve context from Pinecone
+    retriever = pinecone_store.as_retriever()
+    context = retriever.retrieve(question)
+    
+    # Format prompt with context and question
+    formatted_prompt = prompt.format(context=context, question=question)
+    
+    # Get response from the model
+    response = model.predict(formatted_prompt)
+    
+    # Parse the response
+    parsed_response = parser.parse(response)
+    
+    return parsed_response
 
 # Streamlit UI
 st.title("RAG-based Chatbot")
 
 user_input = st.text_input("Ask your question:")
 if user_input:
-    response = chain.invoke(user_input)
+    response = run_rag_chain(user_input)
     st.write("Response:", response)
-
-# To run the Streamlit app, use the command: `streamlit run app.py`
