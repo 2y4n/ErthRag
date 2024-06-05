@@ -21,10 +21,10 @@ model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
 
 # Define the prompt template
 template = """
-Answer the questions based on the context below in Arabic.
+Answer the question based on the context below in Arabic.
 The context below contains information about Saudi Arabia's culture, heritage, and historical sites.
 Do not mention the context explicitly in your answer ever.
-If you can't answer the question, reply "I don't know".
+If the context does not contain the answer, reply "I don't know".
 
 Context: {context}
 Question: {question}
@@ -56,16 +56,10 @@ def run_rag_chain(question):
     
     # Join the documents to create a context string
     context = " ".join([doc.page_content for doc in docs])
-    
-    # Print context for debugging
-    print(f"Context: {context}")
-    
+
     # Format prompt with context and question
     formatted_prompt = prompt.format(context=context, question=question)
-    
-    # Print prompt for debugging
-    print(f"Formatted Prompt: {formatted_prompt}")
-    
+
     # Get response from the model
     response = model.predict(formatted_prompt)
     
