@@ -24,7 +24,7 @@ template = """
 Answer the questions based on the context below in Arabic.
 The context below contains information about Saudi Arabia's culture, heritage, and historical sites.
 Do not mention the context explicitly in your answer ever.
-If you can't answer the question, reply "I don't know".
+If you can't answer the question from the context, reply "I don't know".
 
 Context: {context}
 Question: {question}
