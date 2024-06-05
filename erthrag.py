@@ -13,6 +13,7 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
+
 # Access OpenAI API key from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 openai.api_key = OPENAI_API_KEY
@@ -59,18 +60,18 @@ pinecone = PineconeVectorStore.from_documents(
 )
 
 # Define the chain
-chain = (
-    {"context": pinecone.as_retriever(), "question": RunnablePassthrough()}
-    | prompt
-    | model
-    | parser
-)
+def chain(context, question):
+    retrieval_result = pinecone.as_retriever()(context)
+    prompt_result = prompt(context=retrieval_result, question=question)
+    model_result = model(prompt_result)
+    parsed_result = parser(model_result)
+    return parsed_result
 
 # Streamlit UI
-st.image("Erth.png", use_column_width=True)  
+st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
-tab1, tab2 = st.tabs(["FT-AraGPT2 Text-to-text", " "]) 
+tab1, tab2 = st.tabs(["FT-AraGPT2 Text-to-text", " "])
 
 with tab1:
     st.header("Fine-Tuned AraGPT2 Text-To-Text")
@@ -86,7 +87,7 @@ with tab1:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        response = chain.invoke(prompt)
+        response = chain({"context": prompt}, "question")
         with st.chat_message("assistant"):
             st.markdown(response)
 
