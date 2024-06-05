@@ -80,7 +80,6 @@ st.markdown("""
     .chat-messages {
         flex-grow: 1;
         overflow-y: auto;
-        max-height: 70vh;
         margin-bottom: 10px;
     }
     .chat-input {
