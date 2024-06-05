@@ -23,8 +23,8 @@ model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
 template = """
 Answer the question based on the context below in Arabic.
 The context below contains information about Saudi Arabia's culture, heritage, and historical sites.
-Do not mention the context explicitly in your answer ever, and Make your answers short and simple.
-If the context does not contain the answer, reply "I don't know".
+Do not mention the context explicitly in your answer ever.
+If the context does not contain the answer, reply "I don't know", and recommend to ask somthing from context below.
 
 Context: {context}
 Question: {question}
