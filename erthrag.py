@@ -67,7 +67,7 @@ def run_rag_chain(question):
     parsed_response = parser.parse(response)
     
     return parsed_response
-    
+
 # Inject custom CSS
 st.markdown("""
     <style>
@@ -90,11 +90,10 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Streamlit UI
 st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
-#tabs
+# Tabs
 tab1, tab2 = st.tabs(["RAG-based Chatbot", ""])
 
 with tab1:
@@ -102,11 +101,18 @@ with tab1:
     if "rag_messages" not in st.session_state:
         st.session_state.rag_messages = []
 
+    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+    
+    # Display chat messages
+    st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
     for message in st.session_state.rag_messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    if prompt := st.chat_input("إسألني عن التراث السعودي (مثلًا : الاماكن التاريخية في الرياض, القصيم, حائل)"):
+    # Input box
+    st.markdown('<div class="chat-input">', unsafe_allow_html=True)
+    if prompt := st.chat_input("إسألني عن التراث السعودي (RAG-based)"):
         st.session_state.rag_messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -116,3 +122,6 @@ with tab1:
             st.markdown(response)
 
         st.session_state.rag_messages.append({"role": "assistant", "content": response})
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
