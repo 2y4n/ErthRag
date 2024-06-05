@@ -12,7 +12,6 @@ from langchain_community.vectorstores import DocArrayInMemorySearch
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_pinecone import PineconeVectorStore
 import pinecone
-from pinecone import Pinecone
 
 # Access OpenAI API key from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
