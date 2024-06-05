@@ -14,6 +14,7 @@ from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
 
+
 # Access OpenAI API key from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 openai.api_key = OPENAI_API_KEY
@@ -59,12 +60,15 @@ pinecone = PineconeVectorStore.from_documents(
     splitted, embedding, index_name=index_name
 )
 
+retriever = pinecone.as_retriever()
+
 # Define the chain
-def chain(context, question):
-    retrieval_result = pinecone.as_retriever()(context)
-    prompt_result = prompt(context=retrieval_result, question=question)
+def chain(question):
+    retrieval_result = retriever.retrieve(question)
+    context = " ".join([doc.page_content for doc in retrieval_result])
+    prompt_result = prompt.format(context=context, question=question)
     model_result = model(prompt_result)
-    parsed_result = parser(model_result)
+    parsed_result = parser.parse(model_result)
     return parsed_result
 
 # Streamlit UI
@@ -87,7 +91,7 @@ with tab1:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        response = chain({"context": prompt}, "question")
+        response = chain(prompt)
         with st.chat_message("assistant"):
             st.markdown(response)
 
