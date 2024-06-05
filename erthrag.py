@@ -61,7 +61,7 @@ pinecone_vectorstore = PineconeVectorStore.from_documents(
     splitted, embedding, index_name=index_name
 )
 
-retriever = pinecone.as_retriever()
+retriever = pinecone_vectorstore.as_retriever()
 
 # Define the chain
 def chain(question):
