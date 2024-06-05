@@ -29,7 +29,7 @@ If the context does not contain the answer, reply "I don't know".
 Context: {context}
 Question: {question}
 """
-prompt = ChatPromptTemplate.from_template(template)
+sys_prompt = ChatPromptTemplate.from_template(template)
 parser = StrOutputParser()
 
 # Load and split the data
@@ -58,7 +58,7 @@ def run_rag_chain(question):
     context = " ".join([doc.page_content for doc in docs])
 
     # Format prompt with context and question
-    formatted_prompt = prompt.format(context=context, question=question)
+    formatted_prompt = sys_prompt.format(context=context, question=question)
 
     # Get response from the model
     response = model.predict(formatted_prompt)
