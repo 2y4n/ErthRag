@@ -1,4 +1,4 @@
-body {
+/* body {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -25,3 +25,4 @@ body {
     overflow-y: auto;
     padding-bottom: 150px; /* Space for chat input container */
 }
+ */
