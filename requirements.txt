@@ -4,8 +4,8 @@ langchain
 langchain_community
 langchain[docarray]
 docarray==0.40.0
-langchain_pinecone
-pinecone-client
+langchain_pinecone==0.1.1
+pinecone-client==3.2.2
 openai
 requests
 pinecone==3.2.2
