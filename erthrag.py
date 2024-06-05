@@ -60,8 +60,8 @@ pico = PineconeVectorStore.from_documents(
 )
 
 # Define the chain
-def chain(question):
-    retrieval_result = pico.as_retriever()(prompt)
+def chain(context,question):
+    retrieval_result = pico.as_retriever()(context)
     prompt_result = prompt(context=retrieval_result, question=question)
     model_result = model(prompt_result)
     parsed_result = parser(model_result)
