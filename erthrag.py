@@ -57,8 +57,14 @@ def run_rag_chain(question):
     # Join the documents to create a context string
     context = " ".join([doc.page_content for doc in docs])
     
+    # Print context for debugging
+    print(f"Context: {context}")
+    
     # Format prompt with context and question
     formatted_prompt = prompt.format(context=context, question=question)
+    
+    # Print prompt for debugging
+    print(f"Formatted Prompt: {formatted_prompt}")
     
     # Get response from the model
     response = model.predict(formatted_prompt)
