@@ -12,12 +12,21 @@ from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
 # Access the API keys from Streamlit secrets
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+OPENAI_API_KEY = st.secrets["api_keys"]["openai_api_key"]
+PINECONE_API_KEY = st.secrets["api_keys"]["pinecone_api_key"]
 INDEX_NAME = "erth"
+
+# Initialize Pinecone
+os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
+Pinecone.init(api_key=PINECONE_API_KEY)
+index = Pinecone.Index(INDEX_NAME)
 
 # Initialize OpenAI model
 model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
+
+# Initialize the Pinecone vector store
+embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+pinecone_store = PineconeVectorStore(index, embedding)
 
 # Define the prompt template
 template = """
@@ -32,22 +41,6 @@ Question: {question}
 prompt = ChatPromptTemplate.from_template(template)
 parser = StrOutputParser()
 
-# Load and split the data
-loader = TextLoader("data.txt")  # Adjust the path as needed
-text = loader.load()
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
-splitted = text_splitter.split_documents(text)
-
-# Initialize embeddings and vector store
-embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
-
-# Initialize Pinecone
-os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
-pc = Pinecone(api_key=PINECONE_API_KEY)
-index = pc.Index(INDEX_NAME)
-pinecone_store = PineconeVectorStore.from_documents(splitted, embedding, index_name=INDEX_NAME)
-
 # Define the retrieval-augmented generation (RAG) chain
 def run_rag_chain(question):
     # Retrieve context from Pinecone
@@ -56,10 +49,16 @@ def run_rag_chain(question):
     
     # Join the documents to create a context string
     context = " ".join([doc.page_content for doc in docs])
-
+    
+    # Print context for debugging
+    print(f"Context: {context}")
+    
     # Format prompt with context and question
     formatted_prompt = prompt.format(context=context, question=question)
-
+    
+    # Print prompt for debugging
+    print(f"Formatted Prompt: {formatted_prompt}")
+    
     # Get response from the model
     response = model.predict(formatted_prompt)
     
@@ -68,7 +67,6 @@ def run_rag_chain(question):
     
     return parsed_response
 
-# Streamlit UI
 st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
