@@ -2,7 +2,7 @@ streamlit
 langchain_openai
 langchain
 langchain_community
-docarray
+docarray==0.40.0
 langchain[docarray]
 langchain_pinecone
 pinecone-client
