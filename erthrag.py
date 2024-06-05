@@ -60,8 +60,8 @@ pico = PineconeVectorStore.from_documents(
 )
 
 # Define the chain
-def chain(context, question):
-    retrieval_result = pico.as_retriever()(context)
+def chain(question):
+    retrieval_result = pico.as_retriever()(prompt)
     prompt_result = prompt(context=retrieval_result, question=question)
     model_result = model(prompt_result)
     parsed_result = parser(model_result)
@@ -88,7 +88,7 @@ with tab1:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        response = chain(retrieval_result, prompt)
+        response = chain(prompt)
         with st.chat_message("assistant"):
             st.markdown(response)
 
