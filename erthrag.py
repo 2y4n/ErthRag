@@ -88,7 +88,7 @@ with tab1:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        response = chain.invoke(prompt)
+        response = chain(prompt)
         with st.chat_message("assistant"):
             st.markdown(response)
 
