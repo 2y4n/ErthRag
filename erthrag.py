@@ -60,11 +60,11 @@ pinecone_vectorstore = PineconeVectorStore.from_documents(
     splitted, embedding, index_name=index_name
 )
 
-retriever = pinecone_vectorstore.as_retriever()
+retriever = pinecone.as_retriever()
 
 # Define the chain
 def chain(question):
-    retrieval_result = retriever.get_relevant_documents(question)
+    retrieval_result = retriever.retrieve(question)
     context = " ".join([doc.page_content for doc in retrieval_result])
     prompt_result = prompt.format(context=context, question=question)
     model_result = model(prompt_result)
