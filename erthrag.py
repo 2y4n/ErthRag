@@ -19,7 +19,7 @@ INDEX_NAME = "erth"
 # Initialize Pinecone
 os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
 pc = Pinecone(api_key=PINECONE_API_KEY)
-index = Pinecone.Index(INDEX_NAME)
+index = Pinecone.Index("erth")
 
 # Initialize OpenAI model
 model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
