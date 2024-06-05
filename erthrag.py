@@ -93,7 +93,7 @@ st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
 # Tabs
-tab1, tab2 = st.tabs(["RAG-based Chatbot", ""])
+tab1, tab2 = st.tabs(["  ", " "])
 
 with tab1:
     st.header("RAG-based Chatbot")
