@@ -2,12 +2,9 @@ streamlit
 langchain_openai
 langchain
 langchain_community
-docarray==0.40.0
 langchain[docarray]
+docarray==0.40.0
 langchain_pinecone
 pinecone-client
 openai
-transformers
-nltk
-pydub
 requests
