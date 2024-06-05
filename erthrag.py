@@ -74,7 +74,7 @@ st.markdown("""
     .chat-container {
         display: flex;
         flex-direction: column;
-        height: 80vh;
+        height: 50vh;
         overflow: hidden;
     }
     .chat-messages {
@@ -96,7 +96,7 @@ st.title("Erth | إرث")
 tab1, tab2 = st.tabs(["  ", " "])
 
 with tab1:
-    st.header("RAG-based Chatbot")
+    st.header("  ")
     if "rag_messages" not in st.session_state:
         st.session_state.rag_messages = []
 
