@@ -13,11 +13,12 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
-# Set OpenAI API key
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# Access OpenAI API key from Streamlit secrets
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+openai.api_key = OPENAI_API_KEY
 
 # Initialize model and parser
-model = ChatOpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"], model="gpt-4o")
+model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
 parser = StrOutputParser()
 
 # Define the prompt template
@@ -42,11 +43,13 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50
 splitted = text_splitter.split_documents(text)
 
 # Initialize embeddings and vectorstore
-embedding = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
+embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
 
-# Set Pinecone API key
-pc = Pinecone(api_key=st.secrets["PINECONE_API_KEY"])
+# Set Pinecone API key from Streamlit secrets
+PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
+pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
 index = pc.Index("erth")
 
 index_name = "erth"
