@@ -13,9 +13,6 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
-
-
-
 # Access OpenAI API key from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 openai.api_key = OPENAI_API_KEY
@@ -52,20 +49,19 @@ vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
 # Set Pinecone API key from Streamlit secrets
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
 os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
-pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
-index = pc.Index("erth")
+pinecone.init(api_key=os.environ['PINECONE_API_KEY'])
 
 index_name = "erth"
 
-pinecone = PineconeVectorStore.from_documents(
+pinecone_vectorstore = PineconeVectorStore.from_documents(
     splitted, embedding, index_name=index_name
 )
 
-retriever = pinecone.as_retriever()
+retriever = pinecone_vectorstore.as_retriever()
 
 # Define the chain
 def chain(question):
-    retrieval_result = retriever.similarity_search(question)
+    retrieval_result = retriever.get_relevant_documents(question)
     context = " ".join([doc.page_content for doc in retrieval_result])
     prompt_result = prompt.format(context=context, question=question)
     model_result = model(prompt_result)
