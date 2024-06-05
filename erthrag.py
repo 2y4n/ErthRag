@@ -15,8 +15,8 @@ st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
 # Access the API keys from Streamlit secrets
-OPENAI_API_KEY = st.secrets["api_keys"]["openai_api_key"]
-PINECONE_API_KEY = st.secrets["api_keys"]["pinecone_api_key"]
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
 INDEX_NAME = "erth"
 
 # Initialize OpenAI model
