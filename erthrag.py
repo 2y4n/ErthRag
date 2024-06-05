@@ -18,7 +18,7 @@ INDEX_NAME = "erth"
 
 # Initialize Pinecone
 os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
-Pinecone.init(api_key=PINECONE_API_KEY)
+pc = Pinecone(api_key=PINECONE_API_KEY)
 index = Pinecone.Index(INDEX_NAME)
 
 # Initialize OpenAI model
