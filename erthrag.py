@@ -12,7 +12,7 @@ from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
 # Set OpenAI API key
-openai.api_key = OPENAI_API_KEY
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Initialize model and parser
 model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
@@ -40,11 +40,11 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50
 splitted = text_splitter.split_documents(text)
 
 # Initialize embeddings and vectorstore
-embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+embedding = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
 vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
 
 # Set Pinecone API key
-pc = Pinecone(api_key=PINECONE_API_KEY)
+pc = Pinecone(api_key=st.secrets["PINECONE_API_KEY"])
 index = pc.Index("erth")
 
 index_name = "erth"
