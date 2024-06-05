@@ -8,4 +8,4 @@ langchain_pinecone
 pinecone-client
 openai
 requests
-pinecone
+pinecone==3.2.2
