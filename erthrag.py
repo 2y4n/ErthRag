@@ -16,7 +16,7 @@ from pinecone import Pinecone
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Initialize model and parser
-model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
+model = ChatOpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"], model="gpt-4o")
 parser = StrOutputParser()
 
 # Define the prompt template
