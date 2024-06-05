@@ -61,11 +61,7 @@ pico = PineconeVectorStore.from_documents(
 
 # Define the chain
 chain = (
-    {"context": pico.as_retriever(), "question": RunnablePassthrough()}
-    | prompt
-    | model
-    | parser
-)
+    {"context": pico.as_retriever(), "question": RunnablePassthrough()} | prompt | model | parser)
 
 # Streamlit UI
 st.image("Erth.png", use_column_width=True)  
