@@ -49,7 +49,9 @@ vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
 
 # Set Pinecone API key from Streamlit secrets
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-pinecone.init(api_key=PINECONE_API_KEY)
+os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
+pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
+index = pc.Index("erth")
 
 index_name = "erth"
 
