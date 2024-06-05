@@ -67,6 +67,27 @@ def run_rag_chain(question):
     parsed_response = parser.parse(response)
     
     return parsed_response
+    
+# Inject custom CSS
+st.markdown("""
+    <style>
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+        overflow: hidden;
+    }
+    .chat-messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        margin-bottom: 10px;
+    }
+    .chat-input {
+        position: sticky;
+        bottom: 0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Streamlit UI
 st.image("Erth.png", use_column_width=True)
@@ -84,7 +105,7 @@ with tab1:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    if prompt := st.chat_input("إسألني عن التراث السعودي (RAG-based)"):
+    if prompt := st.chat_input("إسألني عن التراث السعودي (مثلًا : الاماكن التاريخية في الرياض, القصيم, حائل)"):
         st.session_state.rag_messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
