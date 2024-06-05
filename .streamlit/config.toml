@@ -1,11 +1,6 @@
 [server]
 headless = true
 
-[pre-run]
-commands = [
-  "bash setup.sh"
-]
-
 [theme]
 primaryColor = '#F63366'
 backgroundColor = '#DEC9B2'
