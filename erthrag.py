@@ -11,9 +11,6 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
-st.image("Erth.png", use_column_width=True)  
-st.title("Erth | إرث")
-
 # Access the API keys from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
