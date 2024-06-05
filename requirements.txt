@@ -3,6 +3,7 @@ langchain_openai
 langchain
 langchain_community
 docarray
+langchain[docarray]
 langchain_pinecone
 pinecone-client
 openai
