@@ -15,6 +15,7 @@ from pinecone import Pinecone
 
 
 
+
 # Access OpenAI API key from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 openai.api_key = OPENAI_API_KEY
@@ -64,7 +65,7 @@ retriever = pinecone.as_retriever()
 
 # Define the chain
 def chain(question):
-    retrieval_result = retriever.retrieve(question)
+    retrieval_result = retriever.similarity_search(question)
     context = " ".join([doc.page_content for doc in retrieval_result])
     prompt_result = prompt.format(context=context, question=question)
     model_result = model(prompt_result)
