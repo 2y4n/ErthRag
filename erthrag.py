@@ -73,19 +73,21 @@ st.markdown("""
     <style>
     .chat-container {
         display: flex;
-        flex-direction: column-reverse;
+        flex-direction: column;
         height: 80vh;
-        overflow: hidden;
     }
     .chat-messages {
         flex-grow: 1;
         overflow-y: auto;
-        max-height: 70vh;
         margin-bottom: 10px;
+        display: flex;
+        flex-direction: column-reverse;
     }
     .chat-input {
         position: sticky;
         bottom: 0;
+        background-color: white;
+        padding-top: 10px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -102,7 +104,7 @@ with tab1:
         st.session_state.rag_messages = []
 
     st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-    
+
     # Input box
     st.markdown('<div class="chat-input">', unsafe_allow_html=True)
     if prompt := st.chat_input("إسألني عن التراث السعودي (RAG-based)"):
@@ -119,7 +121,7 @@ with tab1:
 
     # Display chat messages
     st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
-    for message in st.session_state.rag_messages:
+    for message in reversed(st.session_state.rag_messages):
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
     st.markdown('</div>', unsafe_allow_html=True)
