@@ -24,7 +24,7 @@ template = """
 Answer the questions based on the context below in Arabic.
 The context below contains information about Saudi Arabia's culture, heritage, and historical sites.
 Do not mention the context explicitly in your answer ever.
-If you can't answer the question from the context, reply "I don't know".
+If you can't answer the question, reply "I don't know".
 
 Context: {context}
 Question: {question}
@@ -68,12 +68,11 @@ def run_rag_chain(question):
     
     return parsed_response
 
-
-
+# Streamlit UI
 st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
-# Tabs
+#tabs
 tab1, tab2 = st.tabs(["RAG-based Chatbot", ""])
 
 with tab1:
@@ -81,9 +80,10 @@ with tab1:
     if "rag_messages" not in st.session_state:
         st.session_state.rag_messages = []
 
+    for message in st.session_state.rag_messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-    # Input box
-    st.markdown('<div class="chat-input">', unsafe_allow_html=True)
     if prompt := st.chat_input("إسألني عن التراث السعودي (RAG-based)"):
         st.session_state.rag_messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
@@ -94,11 +94,3 @@ with tab1:
             st.markdown(response)
 
         st.session_state.rag_messages.append({"role": "assistant", "content": response})
-
-
-    # Display chat messages
-    st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
-    for message in reversed(st.session_state.rag_messages):
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
