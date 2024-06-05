@@ -11,20 +11,17 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
-# Access the API keys from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
 INDEX_NAME = "erth"
 
-# Initialize OpenAI model
 model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-4o")
 
-# Define the prompt template
 template = """
 Answer the question based on the context below in Arabic.
 The context below contains information about Saudi Arabia's culture, heritage, and historical sites.
 Do not mention the context explicitly in your answer ever.
-If the context does not contain the answer, reply "I don't know", and recommend to ask somthing from context below.
+If the context does not contain the answer, reply "I don't know", and recommend to ask somthing from context below that you can answer good and explain it.
 
 Context: {context}
 Question: {question}
@@ -32,23 +29,19 @@ Question: {question}
 sys_prompt = ChatPromptTemplate.from_template(template)
 parser = StrOutputParser()
 
-# Load and split the data
-loader = TextLoader("data.txt")  # Adjust the path as needed
+loader = TextLoader("data.txt") 
 text = loader.load()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
 splitted = text_splitter.split_documents(text)
 
-# Initialize embeddings and vector store
 embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 vectorstore = DocArrayInMemorySearch.from_documents(splitted, embedding)
 
-# Initialize Pinecone
 os.environ['PINECONE_API_KEY'] = PINECONE_API_KEY
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(INDEX_NAME)
 pinecone_store = PineconeVectorStore.from_documents(splitted, embedding, index_name=INDEX_NAME)
 
-# Define the retrieval-augmented generation (RAG) chain
 def run_rag_chain(question):
     # Retrieve context from Pinecone
     retriever = pinecone_store.as_retriever()
