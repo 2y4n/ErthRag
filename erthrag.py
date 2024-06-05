@@ -73,13 +73,14 @@ st.markdown("""
     <style>
     .chat-container {
         display: flex;
-        flex-direction: column;
-        height: 50vh;
+        flex-direction: column-reverse;
+        height: 80vh;
         overflow: hidden;
     }
     .chat-messages {
         flex-grow: 1;
         overflow-y: auto;
+        max-height: 70vh;
         margin-bottom: 10px;
     }
     .chat-input {
@@ -93,22 +94,15 @@ st.image("Erth.png", use_column_width=True)
 st.title("Erth | إرث")
 
 # Tabs
-tab1, tab2 = st.tabs(["  ", " "])
+tab1, tab2 = st.tabs(["RAG-based Chatbot", ""])
 
 with tab1:
-    st.header("  ")
+    st.header("RAG-based Chatbot")
     if "rag_messages" not in st.session_state:
         st.session_state.rag_messages = []
 
     st.markdown('<div class="chat-container">', unsafe_allow_html=True)
     
-    # Display chat messages
-    st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
-    for message in st.session_state.rag_messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-    st.markdown('</div>', unsafe_allow_html=True)
-
     # Input box
     st.markdown('<div class="chat-input">', unsafe_allow_html=True)
     if prompt := st.chat_input("إسألني عن التراث السعودي (RAG-based)"):
@@ -121,6 +115,13 @@ with tab1:
             st.markdown(response)
 
         st.session_state.rag_messages.append({"role": "assistant", "content": response})
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Display chat messages
+    st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
+    for message in st.session_state.rag_messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
